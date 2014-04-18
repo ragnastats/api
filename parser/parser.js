@@ -2,7 +2,19 @@ var fs = require('fs');
 var $ = require('node-jquery');
 
 var items = {};
+var colors = {length: 0, nonblack: 0};
 
+function getMatches(string, regex, index) {
+    index || (index = 1); // default to the first capturing group
+    var matches = [];
+    var match;
+    while (match = regex.exec(string)) {
+        matches.push(match[index]);
+    }
+    return matches;
+}
+
+// Process ragnarok pound seperated tables 
 function processFile(filename, output, property, callback)
 {
     fs.readFile(filename, 'utf8', function(error, file)
@@ -11,6 +23,22 @@ function processFile(filename, output, property, callback)
         {
             return console.log(error);
         }
+
+        var matches = getMatches(file, /(\^[0-9a-f]{6})/gi);
+
+        $.each(matches, function(index, match)
+        {
+            if(typeof colors[match] == "undefined")
+            {
+                colors[match] = 0;
+                colors.length++;
+            }
+
+            colors[match]++;
+
+            if(match != "^000000")
+                colors.nonblack++;
+        });
 
         // Remove comments
         var data = file.replace(/\/\/.*/g, '');
@@ -48,10 +76,17 @@ function processFile(filename, output, property, callback)
     });
 }
 
+// Convert ragnarok markup to HTML
+function ro2html()
+{
+    
+}
+
 processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
     processFile('grf/idnum2itemdesctable.txt', items, 'desc', function()
     {
-        console.log(items);
+      //  console.log(items);
+        console.log(colors);
     });
 });
