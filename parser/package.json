@@ -1,0 +1,10 @@
+{
+  "name": "ro-description-parser",
+  "version": "0.0.1",
+  "author": "Rachel <rachel@ragnastats.com>",
+  "description": "A little node script to generate JSON containing item IDs, names, and descriptions",
+  "dependencies" : {
+    "node-jquery": "*"
+  },
+  "license": "MIT"
+}
