@@ -68,7 +68,19 @@ function processFile(filename, output, property, callback)
                 if(typeof output[item_id] == "undefined")
                     output[item_id] = {};
 
-                output[item_id][property] = ro2html(item_value);
+                // Text processing oh boy
+                item_value = ro2html(item_value);
+
+
+                // Why does it have to feel so dirty
+                var extracted = weight_extractor(item_value);
+                if(extracted)
+                {
+                    item_value = extracted.result;
+                    output[item_id].weight = extracted.weight;
+                }
+
+                output[item_id][property] = item_value;
             }
         }
 
@@ -82,7 +94,7 @@ function ro2html(string)
 {
     string = string.replace(/\r/g, '');
     string = string.replace(/\n/g, '<br>');
-    string = string.replace(/(\^[0-9a-f]{6})/gi, function(color)
+    string = string.replace(/\^[0-9a-f]{6}/gi, function(color)
     {
         color = color.substr(1);
         return '<span style="color: #'+color+'">';
@@ -96,6 +108,31 @@ function ro2html(string)
     });
 
     return string;
+}
+
+// Those pesky weights!
+function weight_extractor(string)
+{
+    var weight = false;
+    
+  //  string = string.replace(/(?:Weight\s:\s?([0-9]+)|Weight : <span style="color: #777777">\s?([0-9]+)\s?<\/span>)/gi, function(number)
+    string = string.replace(/Weight : <span style="color: #777777">\s?([0-9]+)\s?<\/span>/gi, function(text, number)
+    {
+        weight = parseInt(number);
+
+        // Remove the weight from our original text
+        return '';
+    }); 
+
+    if(weight)
+    {
+        return {
+            result: string,
+            weight: weight
+        };
+    }
+
+    return false;
 }
 
 processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
