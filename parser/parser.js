@@ -70,7 +70,7 @@ function processFile(filename, output, property, callback)
 
                 // Text processing oh boy
                 item_value = ro2html(item_value);
-
+                item_value = name_fixer(item_value);
 
                 // Why does it have to feel so dirty
                 var extracted = weight_extractor(item_value);
@@ -115,7 +115,6 @@ function weight_extractor(string)
 {
     var weight = false;
     
-  //  string = string.replace(/(?:Weight\s:\s?([0-9]+)|Weight : <span style="color: #777777">\s?([0-9]+)\s?<\/span>)/gi, function(number)
     string = string.replace(/Weight : <span style="color: #777777">\s?([0-9]+)\s?<\/span>/gi, function(text, number)
     {                        
         weight = parseInt(number);
@@ -134,6 +133,18 @@ function weight_extractor(string)
 
     return false;
 }
+
+// Fix item names
+function name_fixer(string)
+{
+    // Item names don't have spaces!
+    if(string.indexOf(' ') == -1)
+    {
+        return string.replace(/_/g, ' ');
+    }
+
+    return string;
+};
 
 processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
