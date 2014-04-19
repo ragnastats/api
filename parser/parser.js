@@ -150,7 +150,8 @@ processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
     processFile('grf/idnum2itemdesctable.txt', items, 'desc', function()
     {
-        console.log(items);
-        console.log(colors);
+        console.log(JSON.stringify(items));
+//        console.log(items);
+//        console.log(colors);
     });
 });
