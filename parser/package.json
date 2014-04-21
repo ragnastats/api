@@ -4,7 +4,9 @@
   "author": "Rachel <rachel@ragnastats.com>",
   "description": "A little node script to generate JSON containing item IDs, names, and descriptions",
   "dependencies" : {
-    "node-jquery": "*"
+    "node-jquery": "*",
+    "sanitize-html": "*",
+    "csv": "*"
   },
   "license": "MIT"
 }

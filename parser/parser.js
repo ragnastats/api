@@ -1,6 +1,7 @@
 var fs = require('fs');
 var $ = require('node-jquery');
 var sanitizeHtml = require('sanitize-html');
+var csv = require('csv');
 
 var items = {};
 var colors = {length: 0, nonblack: 0};
@@ -146,11 +147,34 @@ function name_fixer(string)
     return string;
 };
 
+function processType(filename)
+{
+    fs.readFile(filename, 'utf8', function(error, file)
+    {
+        if(error)
+        {
+            return console.log(error);
+        }
+
+        file = file.replace(/\r/g, '\n');
+
+//console.log(file);
+
+        csv().from(file, {comment: '//'})
+        .to.array( function(data, count)
+        {
+            console.log(data);
+        })
+    });
+}
+
 processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
     processFile('grf/idnum2itemdesctable.txt', items, 'desc', function()
     {
-        console.log(JSON.stringify(items));
+        processType('eAthena/item_db.txt');
+        
+       // console.log(JSON.stringify(items));
 //        console.log(items);
 //        console.log(colors);
     });
