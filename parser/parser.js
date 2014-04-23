@@ -147,7 +147,7 @@ function name_fixer(string)
     return string;
 };
 
-function processType(filename)
+function processType(filename, callback)
 {
     fs.readFile(filename, 'utf8', function(error, file)
     {
@@ -156,14 +156,20 @@ function processType(filename)
             return console.log(error);
         }
 
+        // Remove comments and windows newlines
+        file = file.replace(/\/\/.*/g, '');
         file = file.replace(/\r/g, '\n');
 
-//console.log(file);
-
-        csv().from(file, {comment: '//'})
-        .to.array( function(data, count)
+        csv().from.string(file).to.array(function(data, count)
         {
-            console.log(data);
+            for(var i = 0; i < count; i++)
+            {                
+                if(typeof items[data[i][0]] != "undefined")
+                    items[data[i][0]].type = data[i][3];
+            }
+
+            if(typeof callback == "function")
+                callback();
         })
     });
 }
@@ -172,10 +178,12 @@ processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
     processFile('grf/idnum2itemdesctable.txt', items, 'desc', function()
     {
-        processType('eAthena/item_db.txt');
-        
-       // console.log(JSON.stringify(items));
-//        console.log(items);
+        processType('eAthena/item_db.txt', function()
+        {
+      //    console.log(JSON.stringify(items));
+        console.log(items);
 //        console.log(colors);
+
+        });        
     });
 });
