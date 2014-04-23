@@ -149,6 +149,32 @@ function name_fixer(string)
 
 function processType(filename, callback)
 {
+/*{ '0': 273,
+  '2': 709,
+  '3': 1623,
+  '4': 762,
+  '5': 1210,
+  '6': 560,
+  '7': 56,
+  '8': 38,
+  '10': 79,
+  '11': 76,
+  '18': 828 }*/
+    
+    var types = {
+        '0': ["usable", "healing"],
+        '2': ["usable"],
+        '3': ["misc"],
+        '4': ["equip", "weapon"],
+        '5': ["equip", "armor"],
+        '6': ["misc", "card"],
+        '7': ["equip", "egg"],
+        '8': ["equip", "headgear"],
+        '10': ["misc", "ammo"],
+        '11': ["usable", "scroll"],
+        '18': ["usable", "cash"]    
+    };
+    
     fs.readFile(filename, 'utf8', function(error, file)
     {
         if(error)
@@ -163,9 +189,15 @@ function processType(filename, callback)
         csv().from.string(file).to.array(function(data, count)
         {
             for(var i = 0; i < count; i++)
-            {                
-                if(typeof items[data[i][0]] != "undefined")
-                    items[data[i][0]].type = data[i][3];
+            {
+                var item_id = data[i][0];
+                var item_type = data[i][3];
+                
+                if(typeof types[item_type] != "undefined"
+                    && typeof items[item_id] != "undefined")
+                {
+                    items[item_id].type = types[item_type];
+                }                
             }
 
             if(typeof callback == "function")
@@ -180,8 +212,8 @@ processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
     {
         processType('eAthena/item_db.txt', function()
         {
-      //    console.log(JSON.stringify(items));
-        console.log(items);
+          console.log(JSON.stringify(items));
+      //  console.log(items);
 //        console.log(colors);
 
         });        
