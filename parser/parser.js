@@ -210,12 +210,15 @@ processFile('grf/idnum2itemdisplaynametable.txt', items, 'name', function()
 {
     processFile('grf/idnum2itemdesctable.txt', items, 'desc', function()
     {
-        processType('eAthena/item_db.txt', function()
+        processFile('grf/itemslotcounttable.txt', items, 'slots', function()
         {
-          console.log(JSON.stringify(items));
-      //  console.log(items);
-//        console.log(colors);
+            processType('eAthena/item_db.txt', function()
+            {
+              console.log(JSON.stringify(items));
+          //  console.log(items);
+    //        console.log(colors);
 
-        });        
+            });
+        });
     });
 });
