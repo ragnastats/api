@@ -116,7 +116,7 @@ function weight_extractor(string)
 {
     var weight = false;
     
-    string = string.replace(/Weight : <span style="color: #777777">\s?([0-9]+)\s?<\/span>/gi, function(text, number)
+    string = string.replace(/Weight[ :]+(?:<span style="color: #777777">)?\s?([0-9\.]+)\s?(?:<\/span>)?/gi, function(text, number)
     {                        
         weight = parseInt(number);
 
