@@ -120,8 +120,8 @@ function weight_extractor(string)
     {                        
         weight = parseInt(number);
 
-        // Remove the weight from our original text
-        return '';
+        // Return the original text
+        return text;
     }); 
 
     if(weight !== false)
